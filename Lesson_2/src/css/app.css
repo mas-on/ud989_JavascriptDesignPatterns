@@ -1,0 +1,18 @@
+body {
+    width: 100%;
+}
+
+.cat-clicked {
+    font: bold;
+    font-size: large;
+}
+
+.col-left {
+    width: 50%;
+    float: left;
+}
+
+.col-right {
+    width: 50%;
+    float: right;
+}
