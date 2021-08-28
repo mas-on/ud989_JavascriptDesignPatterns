@@ -2,8 +2,8 @@ $(function(){
 
 
     var model = {
-        init: function() {
-            //if (!sessionStorage.cats) {
+        currentCat: null,
+        init: function() {            
                 sessionStorage.setItem("cats", JSON.stringify([ 
                     { name: "Alice", img: "../img/meeeow.jpg", clicked: 0 },
                     { name: "Barsik", img: "../img/meeeow2.jpg", clicked: 0 },
@@ -12,7 +12,7 @@ $(function(){
                     { name: "Elliott", img: "../img/meeeow5.jpg", clicked: 0 },
                     { name: "Fury", img: "../img/meeeow6.jpg", clicked: 0 },
                 ]));
-           // }
+           
         },
         getAll: function() {
             return JSON.parse(sessionStorage.getItem("cats"));
@@ -36,8 +36,8 @@ $(function(){
     
 
     var octopus = {
-        addClick: function(catName) {
-            let cat = model.getByName(catName); 
+        addClickToCurrentCat: function() {
+            let cat = model.currentCat; 
             cat.clicked++;           
             model.update(cat);
             this.selectCat(cat.name);
@@ -46,6 +46,9 @@ $(function(){
         getCats: function() {
             return model.getAll();
         },
+        getSelectedCat: function() {
+            return model.currentCat;
+        },
 
         init: function() {
             model.init();
@@ -53,7 +56,9 @@ $(function(){
             selectedCatView.init();
         },
         selectCat: function(catName) {
-            selectedCatView.render(model.getByName(catName));
+            const curCat = model.getByName(catName);
+            model.currentCat = curCat;
+            selectedCatView.render();
         }
     };
 
@@ -74,16 +79,17 @@ $(function(){
     var selectedCatView = {
         init: function(){
             $(".sel-cat").hide();
+            $(".cat-img").click(function(e){
+                    octopus.addClickToCurrentCat();
+                    e.preventDefault();
+                });   
         },
-        render: function(cat) {
+        render: function() {
+            const cat = octopus.getSelectedCat();
             $(".sel-cat").show();
             $(".cat-name").text(cat.name);
             $(".cat-clicked").text(cat.clicked);
-            $(".cat-img").attr("src",cat.img).unbind()
-                .click(function(e){
-                    octopus.addClick(cat.name);
-                    e.preventDefault();
-                });            
+            $(".cat-img").attr("src",cat.img);            
         }
     };
 
